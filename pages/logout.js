@@ -1,6 +1,6 @@
 import { PageTemplate } from "../lib/PageTemplate.js";
 
-class PageHome extends PageTemplate {
+class PageLogout extends PageTemplate {
     constructor(data) {
         super(data);
     }
@@ -13,4 +13,4 @@ class PageHome extends PageTemplate {
     }
 }
 
-export { PageHome };
+export { PageLogout };
