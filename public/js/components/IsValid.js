@@ -1,4 +1,4 @@
-//error/first approach ar vykdant darba iskyla klaida, taip arba ne. Taip is kyla ir tokia...
+//error/first approach ar vykdant darba iskyla klaida, taip arba ne. Taip iskyla ir tokia...
 
 class IsValid {
     //cia turesim kruva metodu kurie galis patikrinti ar varads geras, ir tt
@@ -7,11 +7,11 @@ class IsValid {
             return [true, 'Neduotas parametras'];
         }
 
-       // const parts=str.split('');
-       if (typeof str !== 'string') {
-        return [true, 'Netinkamas tipas, turi buti "string"'];
-    }
-    str = str.trim().replace(/\s+/g, ' ');
+        // const parts=str.split('');
+        if (typeof str !== 'string') {
+            return [true, 'Netinkamas tipas, turi buti "string"'];
+        }
+        str = str.trim().replace(/\s+/g, ' ');
         // str = str.trim().replaceAll('  ', ' '); // nes pas mane sitas neveikia :(
 
         const minWordsCount = 2;
@@ -53,15 +53,38 @@ class IsValid {
         return [false, 'OK'];
 
     }
+
     static email(str) {
-        if (str.length<2)  {
-            return [true,'Per trumpas email tesktas'];
+        if (str === undefined) {
+            return [true, 'Neduotas parametras'];
         }
+
+        if (typeof str !== 'string') {
+            return [true, 'Netinkamas tipas, turi buti "string"'];
+        }
+
+        const minWordLength = 6;
+        if (str.length < minWordLength) {
+            return [true, `Per trumpas, turi buti minimum ${minWordLength} simboliai`];
+        }
+
+        const allowedEmailSymbols = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        if (!str.includes('@')) {
+            return [true, `Truksta @ simbolio`];
+        }
+        let simbolCount = 0;
+        for (const simbol of str) {
+            if (simbol === '@') {
+                simbolCount++;
+            }
+        }
+
         return [false, 'OK'];
     }
+
     static password(str) {
-        if (str.length<2)  {
-            return [true,'Per trumpas password tekstas'];
+        if (str.length < 2) {
+            return [true, 'Per trumpas password tekstas'];
         }
         return [false, 'OK'];
     }
