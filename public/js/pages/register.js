@@ -51,13 +51,29 @@ if (submitDOM) {
         } else {
             //jei klaidu visgi ne buvo rasta, tuomet:
             //siunciam tuomet duomenys i serveri ir atspausdinam juos
-            console.log('KLAIDU NERASTA...');
-            console.log('SIUNCIAM DUOMENIS I SERVERI...');
-            console.log(data);
+            //console.log('KLAIDU NERASTA...');
+            // console.log('SIUNCIAM DUOMENIS I SERVERI...');
+            // console.log(data);
+
+            delete data.repass;
+            delete data.tos;
+
+            async function postData() {
+                const response = await fetch(formDOM.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data),
+                });
+                return response.json();
+            }
+
+            postData();
         }
 
         // console.log(data);
-        //tikriname ar lauka ine tusti
+        //tikriname ar laukai ne tusti
         //tikriname ar geros vertes:
         //ar vardas "tinkamas" (minimum 2 zodziai)
         //ar email "tinkamas"
