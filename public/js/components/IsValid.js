@@ -79,8 +79,19 @@ class IsValid {
             }
         }
 
+        if (simbolCount ===0 || simbolCount>1) {
+            return [true, 'Email turi tureti tik viena @ simboli']
+        }
         return [false, 'OK'];
     }
+
+//    if (str[str.length-1] ==='@') {
+//     return [true, 'truksta teksto po @ simbolio']
+//    }
+
+   if (str.at(-1) ==='@') {
+    return [true,'truksta tesksto po 6 simbolio']
+   }
 
     static password(str) {
         if (str.length < 2) {
@@ -88,5 +99,8 @@ class IsValid {
         }
         return [false, 'OK'];
     }
+
 }
+
+
 export { IsValid };

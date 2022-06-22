@@ -1,5 +1,6 @@
 import { IsValid } from "./IsValid.js";
 
+
 describe('Gaudome netinkamus tipus', () => {
     test('no params', () => {
         const [err, msg] = IsValid.fullname();
@@ -240,7 +241,63 @@ describe('Gauname netinkamas e-mail reiksmes', () => {
         expect(msg).toBe('Per trumpas, turi buti minimum 6 simboliai');
     })
     
+    test('forgot @',() => {
+        const [err, msg] = IsValid.email('aaaaa.aa');
+        expect(err).toBe(true);
+        expect(msg).toBe('Truksta @ simbolio');
+    })
 
+    test('too much @ simbol',() => {
+        const [err, msg] = IsValid.email('aa@@aaa.aa');
+        expect(err).toBe(true);
+        expect(msg).toBe('Emmail turi tureti tik viena @ simboliu');
+    })
+
+    test('please trim @ simbols',() => {
+        const [err, msg] = IsValid.email('@aaaaa.lt@');
+        expect(err).toBe(true);
+        expect(msg).toBe('truksta teksto pries @ simboliu');
+    })
+
+    if (str[0]==='@') {
+        const [err, msg] = IsValid.email('@aaaaa.lt@');
+        expect(err).toBe(true);
+        expect(msg).toBe('truksta teksto pries @ simboliu');
+    }
+
+    if (str[-1]==='@') {
+        const [err, msg] = IsValid.email('@aaaaa.lt@');
+        expect(err).toBe(true);
+        expect(msg).toBe('truksta teksto po @ simboliu');
+    }
+
+    test('invalid simbols',()=> {
+        const [err, msg]=IsValid.email('aaa@a<.lt');
+        expect(err).toBe(true);
+        expect(msg).toBe('neleistini simboliai po @');
+    })
+
+    test('invalid simbols',()=> {
+        const [err, msg]=IsValid.email('aaa@a<.lt');
+        expect(err).toBe(true);
+        expect(msg).toBe('neleistinas simbolis #');
+    })
+
+
+
+    for (const simbol of str){
+        if (!allowedEmailSymbols.includes(simbol)) {
+            return [true, `neleistinas simbolis - ${simbol}`]
+        }
+    }
+   const splitedEmailStr= str.split('@')[1]; //grazins masyva, vissas stringas kuris yra po @ zenklo
+
+   for (const simbolDot of splitedEmailStr) {
+    if (simbolDot ==='.') {
+        dotCount++
+    }
+   }
+    
 })
 
 
