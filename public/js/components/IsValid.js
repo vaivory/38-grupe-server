@@ -1,16 +1,12 @@
-//error/first approach ar vykdant darba iskyla klaida, taip arba ne. Taip iskyla ir tokia...
-
 class IsValid {
-    //cia turesim kruva metodu kurie galis patikrinti ar varads geras, ir tt
-    static fullname(str) {  //statiniai metodai nereikalauja objekto, galima tiesiog i juos kreiptis IsValid.fullname
+    static fullname(str) {
         if (str === undefined) {
             return [true, 'Neduotas parametras'];
         }
-
-        // const parts=str.split('');
         if (typeof str !== 'string') {
             return [true, 'Netinkamas tipas, turi buti "string"'];
         }
+
         str = str.trim().replace(/\s+/g, ' ');
         // str = str.trim().replaceAll('  ', ' '); // nes pas mane sitas neveikia :(
 
@@ -51,56 +47,110 @@ class IsValid {
         }
 
         return [false, 'OK'];
-
     }
 
     static email(str) {
-        if (str === undefined) {
-            return [true, 'Neduotas parametras'];
-        }
-
         if (typeof str !== 'string') {
             return [true, 'Netinkamas tipas, turi buti "string"'];
         }
-
-        const minWordLength = 6;
-        if (str.length < minWordLength) {
-            return [true, `Per trumpas, turi buti minimum ${minWordLength} simboliai`];
+        str = str.trim();
+        if (str === '') {
+            return [true, 'Neivestas email adresas'];
         }
 
-        const allowedEmailSymbols = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        if (!str.includes('@')) {
-            return [true, `Truksta @ simbolio`];
+        const parts = str.split('@');
+        if (parts.length !== 2) {
+            return [true, 'El pasto adresas privalo tureti tik viena @ simboli'];
         }
-        let simbolCount = 0;
-        for (const simbol of str) {
-            if (simbol === '@') {
-                simbolCount++;
+
+        const [locale, domain] = parts;
+        if (locale === '') {
+            return [true, 'Truksta dalies pries @ simboli'];
+        }
+        if (domain === '') {
+            return [true, 'Truksta dalies uz @ simboli'];
+        }
+
+        if (str.includes('..')) {
+            return [true, 'El pastas negali tureti dvieju tastu is eiles'];
+        }
+
+        //petras@mail.com - geras
+
+        //1petras@gmail.com - blogas
+
+        //+'a' -> Nan  //t.y. pliusas pakeicia, t.y. kovertuoja
+        //+'1' -> 1
+        //+'1asd'-> Nan
+
+        //jei sitos dvi eilutes daro ta pati, bet jos nera identiskos/ parseInt skaito iki pirmos ne skaiciaus
+        //+'1' -> 1
+        //parseInt('1') -> 1 //siuo atveju duotam stringa ir gaunam skaiciu
+        //parseInt('1asd')-> 1
+
+        // !isNaN(+locale[0])
+        // !isNaN(+locale[0]) - is stringo bandi istraukt inulini simboli tai yra 1
+        //
+
+//  petras@mail.com - geras
+// !isNaN(+locale[0])
+// !isNaN(+'petras'[0])
+// !isNaN(+'p')
+// !isNaN(NaN)
+// !true
+// false
+
+// 1petras@mail.com - blogas
+// !isNaN(+locale[0])
+// !isNaN(+'1petras'[0])
+// !isNaN(+'1')
+// !isNaN(1)
+// !false
+// true
+
+        const allowedSymbols = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.';
+        if (locale[0] === '.'
+            || !isNaN(+locale[0])) {  //bando atpazinti kada priekyje stovi raide o kada stovi skaicius/ 
+            return [true, 'El pastas turi prasideti raide'];
+        }
+        for (const symbol of locale) {
+            if (!allowedSymbols.includes(symbol)) {
+                return [true, `Pries @ neleistinas naudoti simbolis "${symbol}"`];
             }
         }
 
-        if (simbolCount ===0 || simbolCount>1) {
-            return [true, 'Email turi tureti tik viena @ simboli']
+        const domainParts = domain.split('.');
+        if (domainParts.length === 1) {
+            return [true, 'Uz @ simbolio truksta tasko (netinkamas domenas)'];
         }
+        if (domainParts[0] === '') {
+            return [true, `Uz @ dalies tekstas negali prasideti tasku`];
+        }
+        if (domainParts[domainParts.length - 1].length < 2) {
+            return [true, `Uz @ dalies domenas turi baigtis bent dviejomis raidemis`];
+        }
+        for (const symbol of domain) {
+            if (!allowedSymbols.includes(symbol)) {
+                return [true, `Uz @ neleistinas naudoti simbolis "${symbol}"`];
+            }
+        }
+
         return [false, 'OK'];
     }
 
-//    if (str[str.length-1] ==='@') {
-//     return [true, 'truksta teksto po @ simbolio']
-//    }
-
-   if (str.at(-1) ==='@') {
-    return [true,'truksta tesksto po 6 simbolio']
-   }
-
+    //darom passwordo patikrinima
     static password(str) {
-        if (str.length < 2) {
-            return [true, 'Per trumpas password tekstas'];
+        const minPasswordLength=12;
+
+        if (typeof str!=='string'){
+            return [true,'Netinkamas tipas, turi buti "string"']
         }
+        if (str.length < minPasswordLength) {
+            return [true, `Per trumpas password tekstas, turi buti minimum ${minPasswordLength} simboliai`];
+        }
+
         return [false, 'OK'];
     }
-
 }
 
-
-export { IsValid };
+export { IsValid }

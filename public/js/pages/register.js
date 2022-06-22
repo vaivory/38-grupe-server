@@ -6,7 +6,7 @@ const submitDOM = formDOM.querySelector('button');
 const notificationsDOM = formDOM.querySelector('.notifications');
 
 if (submitDOM) {
-    submitDOM.addEventListener('click', (e) => {
+    submitDOM.addEventListener('click', (e) => {  //jei bus error man tikrinant tai tuomet rodis, kitaip ne
         e.preventDefault();
 
         notificationsDOM.classList.remove('show'); //kiekviena karta kai siunciam forma tai pradedam viska is naujo
@@ -15,7 +15,7 @@ if (submitDOM) {
         const data = {};
         const errors = [];
 
-        for (const inputDOM of inputsDOM) {
+        for (const inputDOM of inputsDOM) { //jei yra checkbox tai darau taip, jei nera tai kitaip
             // console.log([inputDOM]); //skaito kaip js objekta
             // console.log(inputDOM);  //skaito kaip html
             if (inputDOM.type !== 'checkbox') {
@@ -33,14 +33,27 @@ if (submitDOM) {
             }
             else {
                 data[inputDOM.name] = inputDOM.checked; //paimam objekta nurodeom raktazodi ir priskyriam reiksme
+                if (!inputDOM.checked) {
+                    errors.push('Privaloma sutikti su TOS');
+                }
             }
 
         }
 
-        if (errors.length) {
+        if (inputsDOM[2].value !== inputsDOM[3].value) {
+            errors.push('Slaptazodziai nesutampa');
+        }
+
+        if (errors.length) {  //ateina paklausiams ,tai ar buvo klaidu ar ne
             notificationsDOM.classList.add('show');
             //  notificationsDOM.innerHTML=error.map(e=>`<p>${e}.`).join('');
             notificationsDOM.innerText = errors.join('.\n') + '.';  //slash n yra simbolis kuris reiskia nauja eilute kaip ir \r naujas return       }
+        } else {
+            //jei klaidu visgi ne buvo rasta, tuomet:
+            //siunciam tuomet duomenys i serveri ir atspausdinam juos
+            console.log('KLAIDU NERASTA...');
+            console.log('SIUNCIAM DUOMENIS I SERVERI...');
+            console.log(data);
         }
 
         // console.log(data);
