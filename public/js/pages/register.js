@@ -58,6 +58,16 @@ if (submitDOM) {
             delete data.repass;
             delete data.tos;
 
+            // async/await
+
+            fetch(formDOM.action{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+
             async function postData() {
                 const response = await fetch(formDOM.action, {
                     method: 'POST',
